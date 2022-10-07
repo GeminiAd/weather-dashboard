@@ -16,21 +16,43 @@ h1 {
     font-weight: bold;
 }
 
-.slate-blue-button {
+button {
+    width: 100%;
+
+    font-weight: bold;
+
+    padding: .4em 0;
+
+    border: 0;
+    border-radius: 5px;
+}
+
+button:focus {
+    outline: none;
+}
+
+.submit-button {
     background-color: slateblue;
     color: white;
 }
 
-.slate-blue-button:hover {
+.submit-button:hover {
     background-color: darkslateblue;
+}
+
+.city-button {
+    background-color: lightgray;
+    color: black;
+
+    margin-bottom: 1em;
+}
+
+.city-button:hover {
+    background-color: slateblue;
     color: white;
 }
 
-ul {
-    list-style-type: none;
-    width: 100%;
-}
-
-li {
-    width: 100%;
+.selected {
+    background-color: slateblue;
+    color: white;
 }
