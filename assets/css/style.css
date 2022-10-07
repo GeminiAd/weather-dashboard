@@ -27,6 +27,7 @@ button {
     border-radius: 5px;
 }
 
+/* Removes the stupid border around each button when you have it selected. */
 button:focus {
     outline: none;
 }
