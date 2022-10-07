@@ -25,3 +25,12 @@ h1 {
     background-color: darkslateblue;
     color: white;
 }
+
+ul {
+    list-style-type: none;
+    width: 100%;
+}
+
+li {
+    width: 100%;
+}
