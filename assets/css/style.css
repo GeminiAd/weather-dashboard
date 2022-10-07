@@ -10,3 +10,18 @@ header {
 h1 {
     color: white;
 }
+
+#city-search-label {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.slate-blue-button {
+    background-color: slateblue;
+    color: white;
+}
+
+.slate-blue-button:hover {
+    background-color: darkslateblue;
+    color: white;
+}
