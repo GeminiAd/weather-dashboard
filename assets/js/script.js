@@ -71,10 +71,7 @@ function closeButtonOnClick(event) {
     cityButtonElement = closeButtonElement.parent();
     var indexToRemove = cityButtonElement.attr("index");
 
-    cityList.splice(indexToRemove, 1);
-    cityButtonElement.remove();
-
-    writeCityList();
+    removeCityButton(cityButtonElement);
 }
 
 /* 
@@ -173,7 +170,33 @@ function loadCityList() {
     } else {
         console.log("NO SAVED DATA EXISTS");
         cityList = JSON.parse(stringifiedCityList);
+        console.log(cityList);
     }
+}
+
+/* 
+ *  Removes a city button from the list of city buttons on the left hand side of the screen.
+ *  In order to fully remove a button on the left-hand side of the screen we must:
+ *      1. Remove the button element from the DOM.
+ *      2. Remove the city from our list of saved cities.
+ *      3. Write the updated city list to storage.
+ */
+function removeCityButton(cityButtonToRemove) {
+    /* 1. Remove the button element from the DOM. */
+    cityButtonToRemove.remove();
+
+    /* 2. Remove the city from our list of saved cities. */
+    var cityName = cityButtonToRemove.text();
+    var lat = cityButtonToRemove.attr("lat");
+    var lon = cityButtonToRemove.attr("lon");
+    var cityToRemove = new City(cityName, lat, lon);
+    index = cityList.findIndex(City.equals, cityToRemove);
+    console.log(index);
+    cityList.splice(index, 1)
+    console.log(cityList);
+
+    /* 3. Write the updated city list to storage. */
+    writeCityList();
 }
 
 /* Displays the city buttons in a list below the search bar */
@@ -181,7 +204,7 @@ function renderCityList() {
     for (var i = 0; i < cityList.length; i++) {
         var cityButton = $("<button>");
         cityButton.addClass("city-button list-button");
-        cityButton.text(cityList[i]);
+        cityButton.text(cityList[i].name);
         cityButton.attr("index", i);
         cityButton.on("click", cityButtonOnClick);
 
@@ -210,8 +233,16 @@ function submitButtonClick(event) {
     fetchCoordinates(cityName);
 }
 
+/* 
+ *  Writes our city list to local storage.
+ *  When we write the city list to storage we must:
+ *      1. Stringify the list
+ *      2. Save the stringified list.
+ */
 function writeCityList() {
-
+    var stringifiedCityList = JSON.stringify(cityList);
+    console.log(stringifiedCityList);
+    localStorage.setItem("weatherCityList", stringifiedCityList);
 }
 
 initializeWeatherDashboard();
