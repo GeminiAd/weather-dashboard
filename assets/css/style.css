@@ -74,3 +74,18 @@ button:focus {
 .close:hover {
     color: white;
 }
+
+#current-weather-card-body {
+    position: relative;
+}
+
+#current-weather-icon {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+}
+
+#forecast-card-title {
+    
+}
