@@ -26,6 +26,7 @@ class City {
 var cityListElement = $("#city-list");
 var submitButtonElement = $(".submit-button");
 var cityTextInputElement = $("#cityText");
+var weatherContentElement = $("#weather-content");
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
 var cityList;
@@ -142,10 +143,62 @@ function createCityButton(cityName, lat, lon) {
 }
 
 /*
- *  Displays the forecast for the selected city when given a list of data representing the 5-day forecast.
+ *  Displays the current weather for the selected city. The current weather for the selected city appears in a card above the 5-day forecast.
  */
-function displayForecast() {
+function displayCurrentWeather(data) {
+    var cityName = data.name;
+    console.log(cityName);
 
+    var forecastTimeUTC = data.dt;
+    console.log(forecastTimeUTC);
+    var forecastMoment = moment.unix(forecastTimeUTC);
+
+    var temp = data.main.temp;
+    var wind = data.wind.speed;
+    var humidity = data.main.humidity;
+    var weatherIcon = data.weather[0].icon;
+    var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIcon+".png";
+    console.log(weatherIconPath);
+
+    var cardToAdd = $("<div>");
+    cardToAdd.addClass("card my-3");
+
+    var cardBody = $("<div>");
+    cardBody.addClass("card-body");
+    cardToAdd.append(cardBody);
+
+    var cardHeader = $("<h2>");
+    cardHeader.addClass("card-title");
+    cardHeader.text(cityName+" "+forecastMoment.format("(dddd, MMMM Do, YYYY   HH:mm:ss)"));
+    cardBody.append(cardHeader);
+
+    var weatherImage = $("<img>");
+    weatherImage.attr("src", weatherIconPath);
+    cardHeader.append(weatherImage);
+
+    var cardTemp = $("<p>");
+    cardTemp.addClass("card-text");
+    cardTemp.text("Temp: "+temp+"°F");
+    cardBody.append(cardTemp);
+
+    var cardWind = $("<p>");
+    cardWind.addClass("card-text");
+    cardWind.text("Wind: "+wind+" MPH");
+    cardBody.append(cardWind);
+
+    var cardHumidity = $("<p>");
+    cardHumidity.addClass("card-text");
+    cardHumidity.text("Humidity: "+humidity+"%");
+    cardBody.append(cardHumidity);
+
+    weatherContentElement.append(cardToAdd);
+}
+
+/*
+ *  Displays the 5-day forecast for the selected city, given the data blob we recieve from OpenWeather.
+ */
+function displayFiveDayForecast(data) {
+    
 }
 
 /* 
@@ -175,8 +228,29 @@ function fetchCoordinates(cityName) {
         });
 }
 
-function fetchWeather(lat, lon) {
-    var requestUrl = 'https://api.github.com/orgs/nodejs/repos';
+/* Fetches the current weather */
+function fetchCurrentWeather(lat, lon) {
+    var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
+    console.log(requestUrl);
+
+    fetch(requestUrl)
+    .then(function (response) {
+      console.log("response", response);
+      
+      return response.json();
+    })
+    .then(function (data) {
+      console.log("data",data)
+      displayCurrentWeather(data);
+    });
+}
+
+/*
+ *  This function fetches the 5-day forecast for the selected city.
+ */
+function fetchWeatherForecast(lat, lon) {
+    var requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
+    console.log(requestUrl);
 
     fetch(requestUrl)
       .then(function (response) {
@@ -186,6 +260,7 @@ function fetchWeather(lat, lon) {
       })
       .then(function (data) {
         console.log("data",data)
+        displayForecast(data);
       });
 }
 
@@ -208,7 +283,7 @@ function loadCityList() {
         console.log("NO SAVED DATA EXISTS");
         cityList = [];
     } else {
-        console.log("NO SAVED DATA EXISTS");
+        console.log("SAVED DATA EXISTS");
         cityList = JSON.parse(stringifiedCityList);
         console.log(cityList);
     }
@@ -263,10 +338,10 @@ function renderCityList() {
         */
 
         var cityName = cityList[i].name;
-        var lat = cityList[i].lat;
-        var lon = cityList[i].lon;
+        var lat = cityList[i].latitude;
+        var lon = cityList[i].longitude;
 
-        cityButton = createCityButton(cityName, lat, lon);
+        var cityButton = createCityButton(cityName, lat, lon);
 
         cityListElement.append(cityButton);
     }
@@ -279,7 +354,13 @@ function renderCityList() {
  *      2. Fetch the weather data for the selected city.
  */
 function select(cityButton) {
+    /* 1. Apply the selected class to style the button. */
     cityButton.addClass("selected");
+
+    /* 2. Fetch the weather data for the selected city. */
+    var lat = cityButton.attr("lat");
+    var lon = cityButton.attr("lon");
+    fetchCurrentWeather(lat, lon);
 }
 
 /* Logic for the submit button on click */
