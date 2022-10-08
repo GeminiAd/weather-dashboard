@@ -11,9 +11,9 @@ class City {
 
     /*
      *  In Java, I seem to recall that there was a function that searches an array for an Object, and it calls a.equals(target) for each element
-     *  Object a in the array. If you wanted that function to work, you had to extend Class Object and then define your own equals function,
-     *  and that would be an elegant way to find an Object in a list. This is my attempt to replicate that in JavaScript.
-     *  This function is used in conjunction with findIndex to compare if each City Object in the array is equal.
+     *  Object a in the array. If you wanted that function to work with custom classes, you had to extend Class Object and then define your own 
+     *  equals function, and that would be an elegant way to find an Object in a list. This is my attempt to replicate that in JavaScript.
+     *  This function is used in conjunction with Array.prototype.findIndex to compare any each City Object in the array is equal to an input City Object.
      *  See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
      *  When you call Array.prototype.findIndex() with a compare function, you can optionally pass it a second argument that you may reference with
      *  the variable this. It may seem odd that a static function is referencing this Object, but findIndex(callbackFn, thisArg) is the concept behind it.
@@ -100,7 +100,7 @@ function closeButtonOnClick(event) {
         closeButtonElement = clickedElement;
     }
 
-    cityButtonElement = closeButtonElement.parent();
+    var cityButtonElement = closeButtonElement.parent();
 
     removeCityButton(cityButtonElement);
 }
@@ -157,24 +157,25 @@ function displayCurrentWeather(data) {
     var wind = data.wind.speed;
     var humidity = data.main.humidity;
     var weatherIcon = data.weather[0].icon;
-    var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIcon+".png";
-    console.log(weatherIconPath);
+    var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIcon+"@4x.png";
 
     var cardToAdd = $("<div>");
     cardToAdd.addClass("card my-3");
 
     var cardBody = $("<div>");
     cardBody.addClass("card-body");
+    cardBody.attr("id", "current-weather-card-body");
     cardToAdd.append(cardBody);
+
+    var weatherImage = $("<img>");
+    weatherImage.attr("src", weatherIconPath);
+    weatherImage.attr("id", "current-weather-icon");
+    cardBody.append(weatherImage);
 
     var cardHeader = $("<h2>");
     cardHeader.addClass("card-title");
     cardHeader.text(cityName+" "+forecastMoment.format("(dddd, MMMM Do, YYYY   HH:mm:ss)"));
     cardBody.append(cardHeader);
-
-    var weatherImage = $("<img>");
-    weatherImage.attr("src", weatherIconPath);
-    cardHeader.append(weatherImage);
 
     var cardTemp = $("<p>");
     cardTemp.addClass("card-text");
@@ -198,7 +199,85 @@ function displayCurrentWeather(data) {
  *  Displays the 5-day forecast for the selected city, given the data blob we recieve from OpenWeather.
  */
 function displayFiveDayForecast(data) {
-    
+    var fiveDayForecastCard = $("<div>");
+    fiveDayForecastCard.addClass("card");
+
+    var fiveDayForecastBody = $("<div>");
+    fiveDayForecastBody.addClass("card-body");
+    fiveDayForecastCard.append(fiveDayForecastBody);
+
+    var fiveDayForecastHeader = $("<h3>");
+    fiveDayForecastHeader.addClass("card-title");
+    fiveDayForecastHeader.text("5-Day Forecast:");
+    fiveDayForecastHeader.attr("id", "forecast-card-title");
+    fiveDayForecastBody.append(fiveDayForecastHeader);
+
+    var containerToAdd = $("<div>");
+    containerToAdd.addClass("container-fluid");
+    fiveDayForecastBody.append(containerToAdd);
+
+    var rowToAdd = $("<div>");
+    rowToAdd.addClass("row");
+    containerToAdd.append(rowToAdd);
+
+    /* 
+     *  I say, for each data nugget we get back, we check to see if the data nugget is the next day. If it is the next day at about 12, we display it
+     *  as the 1-day forecast. If the data nugget is two days away at about 12, we display it as the 2-day forecast, etc.
+     */
+    var now = moment();
+    var currentDayOfYear = now.dayOfYear();
+    console.log(currentDayOfYear);
+
+    var dataList = data.list;
+    for(var i = 0; i < dataList.length; i++) {
+        var forecastTime = moment(dataList[i].dt_txt);
+        var forecastHour = forecastTime.hour();
+        var forecastDayOfYear = forecastTime.dayOfYear();
+
+        if (((forecastDayOfYear - currentDayOfYear) > 0) && (forecastHour === 12)) {
+            console.log(forecastTime.format("(dddd, MMMM Do, YYYY   HH:mm:ss)"));
+            var weatherIconName = dataList[i].weather[0].icon;
+            var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIconName+"@2x.png";
+
+            var temp = dataList[i].main.temp;
+            var wind = dataList[i].wind.speed;
+            var humidity = dataList[i].main.humidity;
+
+            var cardToAdd = $("<div>");
+            cardToAdd.addClass("card col m-3");
+            rowToAdd.append(cardToAdd);
+
+            var cardBody = $("<div>");
+            cardBody.addClass("card-body d-flex flex-column align-items-center");
+            cardToAdd.append(cardBody);
+
+            var cardHeader = $("<h4>");
+            cardHeader.addClass("card-title");
+            cardHeader.text(forecastTime.format("(M/D/YYYY)"));
+            cardBody.append(cardHeader);
+
+            var weatherIcon = $("<img>");
+            weatherIcon.attr("src", weatherIconPath);
+            cardBody.append(weatherIcon);
+
+            var cardTemp = $("<p>");
+            cardTemp.addClass("card-text");
+            cardTemp.text("Temp: "+temp+"°F");
+            cardBody.append(cardTemp);
+
+            var cardWind = $("<p>");
+            cardWind.addClass("card-text");
+            cardWind.text("Wind: "+wind+" MPH");
+            cardBody.append(cardWind);
+
+            var cardHumidity = $("<p>");
+            cardHumidity.addClass("card-text");
+            cardHumidity.text("Humidity: "+humidity+"%");
+            cardBody.append(cardHumidity);
+        }
+    }
+
+    weatherContentElement.append(fiveDayForecastCard);
 }
 
 /* 
@@ -231,7 +310,6 @@ function fetchCoordinates(cityName) {
 /* Fetches the current weather */
 function fetchCurrentWeather(lat, lon) {
     var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
-    console.log(requestUrl);
 
     fetch(requestUrl)
     .then(function (response) {
@@ -242,15 +320,17 @@ function fetchCurrentWeather(lat, lon) {
     .then(function (data) {
       console.log("data",data)
       displayCurrentWeather(data);
+      
+      // I have to include the fetch call to get the five-day forecast here or else sometimes the forecast arrives before the current weather.
+      fetchFiveDayForecast(lat, lon);
     });
 }
 
 /*
  *  This function fetches the 5-day forecast for the selected city.
  */
-function fetchWeatherForecast(lat, lon) {
+function fetchFiveDayForecast(lat, lon) {
     var requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
-    console.log(requestUrl);
 
     fetch(requestUrl)
       .then(function (response) {
@@ -260,7 +340,7 @@ function fetchWeatherForecast(lat, lon) {
       })
       .then(function (data) {
         console.log("data",data)
-        displayForecast(data);
+        displayFiveDayForecast(data);
       });
 }
 
@@ -276,16 +356,11 @@ function initializeWeatherDashboard() {
 
 /* Loads any saved city list. If one doesn't exist, we create an empty array. */
 function loadCityList() {
-    console.log("LOADING CITY LIST");
-
     var stringifiedCityList = localStorage.getItem("weatherCityList");
     if (stringifiedCityList === null) {
-        console.log("NO SAVED DATA EXISTS");
         cityList = [];
     } else {
-        console.log("SAVED DATA EXISTS");
         cityList = JSON.parse(stringifiedCityList);
-        console.log(cityList);
     }
 }
 
@@ -317,26 +392,6 @@ function removeCityButton(cityButtonToRemove) {
 /* Displays the city buttons in a list below the search bar */
 function renderCityList() {
     for (var i = 0; i < cityList.length; i++) {
-        /*
-        var cityButton = $("<button>");
-        cityButton.addClass("city-button list-button");
-        cityButton.text(cityList[i].name);
-        cityButton.attr("index", i);
-        cityButton.on("click", cityButtonOnClick);
-
-        var closeButton = $("<button>");
-        closeButton.attr("type", "button");
-        closeButton.attr("aria-label", "Close");
-        closeButton.addClass("close");
-        closeButton.on("click", closeButtonOnClick);
-
-        var iconToAdd = $("<i>");
-        iconToAdd.addClass("fas fa-times");
-
-        closeButton.append(iconToAdd);
-        cityButton.append(closeButton);
-        */
-
         var cityName = cityList[i].name;
         var lat = cityList[i].latitude;
         var lon = cityList[i].longitude;
@@ -360,6 +415,7 @@ function select(cityButton) {
     /* 2. Fetch the weather data for the selected city. */
     var lat = cityButton.attr("lat");
     var lon = cityButton.attr("lon");
+
     fetchCurrentWeather(lat, lon);
 }
 
