@@ -221,12 +221,11 @@ function displayFiveDayForecast(data) {
     containerToAdd.append(rowToAdd);
 
     /* 
-     *  I say, for each data nugget we get back, we check to see if the data nugget is the next day. If it is the next day at about 12, we display it
+     *  I say, for each data nugget we get back, we check to see if the data nugget is the next day. If it is the next day at about 3PM, we display it
      *  as the 1-day forecast. If the data nugget is two days away at about 12, we display it as the 2-day forecast, etc.
      */
     var now = moment();
     var currentDayOfYear = now.dayOfYear();
-    console.log(currentDayOfYear);
 
     var dataList = data.list;
     for(var i = 0; i < dataList.length; i++) {
@@ -234,9 +233,15 @@ function displayFiveDayForecast(data) {
         var forecastHour = forecastTime.hour();
         var forecastDayOfYear = forecastTime.dayOfYear();
 
-        if (((forecastDayOfYear - currentDayOfYear) > 0) && (forecastHour === 12)) {
+        if (((forecastDayOfYear - currentDayOfYear) > 0) && (forecastHour === 15)) {
             console.log(forecastTime.format("(dddd, MMMM Do, YYYY   HH:mm:ss)"));
             var weatherIconName = dataList[i].weather[0].icon;
+
+            /* If the weather icon given is for night, let's change it to the day icon instead. */
+            if (weatherIconName[weatherIconName.length-1] === "n") {
+                weatherIconName = weatherIconName.replace("n", "d");
+            }
+
             var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIconName+"@2x.png";
 
             var temp = dataList[i].main.temp;
