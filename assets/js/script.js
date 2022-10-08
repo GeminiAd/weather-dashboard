@@ -27,6 +27,7 @@ var cityListElement = $("#city-list");
 var submitButtonElement = $(".submit-button");
 var cityTextInputElement = $("#cityText");
 var weatherContentElement = $("#weather-content");
+var cityInputFormElement = document.getElementById("city-input-form"); // jQuery doesn't have a form reset function, so I have to use regular JS here.
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
 var cityList;
@@ -79,8 +80,7 @@ function cityButtonOnClick(event) {
         /* 2. If this button isn't already selected */
         if (!clickedElement.is(".selected")) {
             /* 2. a. We need to deselect the currently selected city button. */
-            var currentlySelectedElement = $(".selected");
-            currentlySelectedElement.removeClass("selected");
+            deselect();
 
             /* 2. b. We need to select this button. */
             select(clickedElement);
@@ -101,6 +101,10 @@ function closeButtonOnClick(event) {
     }
 
     var cityButtonElement = closeButtonElement.parent();
+
+    if (cityButtonElement.is(".selected")) {
+        deselect();
+    }
 
     removeCityButton(cityButtonElement);
 }
@@ -140,6 +144,24 @@ function createCityButton(cityName, lat, lon) {
 
     /* 4. Return the city button jQuery Object. */
     return cityButton;
+}
+
+/* 
+ *  Deselects the currently selected city. 
+ *  When the currently selected city is deselected we must:
+ *      1. Get the currently selected item.
+ *      2. Remove the class selected so that it is styled correctly.
+ *      3. Clear the weather content element.
+ */
+function deselect() {
+    /* 1. Get the currently selected item. */
+    var currentlySelectedElement = $(".selected");
+
+    /* 2. Remove the class selected so that it is styled correctly. */
+    currentlySelectedElement.removeClass("selected");
+
+    /* 3. Clear the weather content element. */
+    weatherContentElement.empty();
 }
 
 /*
@@ -431,6 +453,7 @@ function submitButtonClick(event) {
     var cityName = cityTextInputElement.val();
 
     fetchCoordinates(cityName);
+    cityInputFormElement.reset();
 }
 
 /* 
