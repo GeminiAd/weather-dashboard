@@ -9,6 +9,15 @@ class City {
         this.longitude = longitude;
     }
 
+    /*
+     *  In Java, I seem to recall that there was a function that searches an array for an Object, and it calls a.equals(target) for each element
+     *  Object a in the array. If you wanted that function to work, you had to extend Class Object and then define your own equals function,
+     *  and that would be an elegant way to find an Object in a list. This is my attempt to replicate that in JavaScript.
+     *  This function is used in conjunction with findIndex to compare if each City Object in the array is equal.
+     *  See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
+     *  When you call Array.prototype.findIndex() with a compare function, you can optionally pass it a second argument that you may reference with
+     *  the variable this. It may seem odd that a static function is referencing this Object, but findIndex(callbackFn, thisArg) is the concept behind it.
+     */
     static equals(cityObject) {
         return ((this.name === cityObject.name) && (this.latitude === cityObject.latitude) && (this.longitude === cityObject.longitude));
     }
@@ -17,6 +26,7 @@ class City {
 var cityListElement = $("#city-list");
 var submitButtonElement = $(".submit-button");
 var cityTextInputElement = $("#cityText");
+var weatherContentElement = $("#weather-content");
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
 var cityList;
@@ -25,34 +35,56 @@ var cityList;
  *  Adds a city button to our list of city buttons on the left-hand side of the page. This function will both add the city button as child
  *  of the city-button-list element to render it to the page and add a new City Object to our saved list of Cities.
  *  Steps needed to add a city button to our list of city buttons:
- *      1. Add the city button as the first child of the city list element.
- *      2. Add a new City to the beginning of our city list.
- *      3. Write the new city list to storage.
+ *      1. If the City isn't already in our list.
+ *      2. Add the city button as the first child of the city list element.
+ *      3. Add a new City to the beginning of our city list.
+ *      4. Write the new city list to storage.
  */
 function addCityButton(cityButtonToAdd) {
-    /* 1. Add the city button as the first child of the city list element. */
-    cityListElement.prepend(cityButtonToAdd);
-
-    /* 2. Add a new City to the beginning of our city list. */
     var cityName = cityButtonToAdd.text();
     var lat = cityButtonToAdd.attr("lat");
     var lon = cityButtonToAdd.attr("lon");
-    cityList.unshift(new City(cityName, lat, lon));
+    cityToAdd = new City(cityName, lat, lon);
+    index = cityList.findIndex(City.equals, cityToAdd);
 
-    /* 3. Write the new city list to storage. */
-    writeCityList();
+    /* 1. If the City isn't already in our list. */
+    if (index == -1) {
+        /* 2. Add the city button as the first child of the city list element. */
+        cityListElement.prepend(cityButtonToAdd);
+
+        /* 3. Add a new City to the beginning of our city list. */
+        var cityName = cityButtonToAdd.text();
+        var lat = cityButtonToAdd.attr("lat");
+        var lon = cityButtonToAdd.attr("lon");
+        cityList.unshift(cityToAdd);
+
+        /* 4. Write the new city list to storage. */
+        writeCityList();
+    }
 }
 
-/* Logic for the city button on click */
+/* 
+ *  Logic for the city button on click.
+ *  When the city button is clicked we need to:
+ *      1. Determine if the the city button click was actually registered by the city button, in case the close button was clicked.
+ *      2. If this button isn't already selected
+ *          a. We need to deselect the currently selected city button.
+ *          b. We need to select this button.
+ */
 function cityButtonOnClick(event) {
+    /* 1. Determine if the the city button click was actually registered by the city button, in case the close button was clicked. */
     var clickedElement = $(event.target);
 
     if (clickedElement.is(".city-button")) {
-        console.log("CITY BUTTON CLICK");
-        var currentlySelectedElement = $(".selected");
-        currentlySelectedElement.removeClass("selected");
+        /* 2. If this button isn't already selected */
+        if (!clickedElement.is(".selected")) {
+            /* 2. a. We need to deselect the currently selected city button. */
+            var currentlySelectedElement = $(".selected");
+            currentlySelectedElement.removeClass("selected");
 
-        clickedElement.addClass("selected");
+            /* 2. b. We need to select this button. */
+            select(clickedElement);
+        }
     }
 }
 
@@ -69,7 +101,6 @@ function closeButtonOnClick(event) {
     }
 
     cityButtonElement = closeButtonElement.parent();
-    var indexToRemove = cityButtonElement.attr("index");
 
     removeCityButton(cityButtonElement);
 }
@@ -111,25 +142,85 @@ function createCityButton(cityName, lat, lon) {
     return cityButton;
 }
 
+/*
+ *  Displays the current weather for the selected city. The current weather for the selected city appears in a card above the 5-day forecast.
+ */
+function displayCurrentWeather(data) {
+    var cityName = data.name;
+    console.log(cityName);
+
+    var forecastTimeUTC = data.dt;
+    console.log(forecastTimeUTC);
+    var forecastMoment = moment.unix(forecastTimeUTC);
+
+    var temp = data.main.temp;
+    var wind = data.wind.speed;
+    var humidity = data.main.humidity;
+    var weatherIcon = data.weather[0].icon;
+    var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIcon+".png";
+    console.log(weatherIconPath);
+
+    var cardToAdd = $("<div>");
+    cardToAdd.addClass("card my-3");
+
+    var cardBody = $("<div>");
+    cardBody.addClass("card-body");
+    cardToAdd.append(cardBody);
+
+    var cardHeader = $("<h2>");
+    cardHeader.addClass("card-title");
+    cardHeader.text(cityName+" "+forecastMoment.format("(dddd, MMMM Do, YYYY   HH:mm:ss)"));
+    cardBody.append(cardHeader);
+
+    var weatherImage = $("<img>");
+    weatherImage.attr("src", weatherIconPath);
+    cardHeader.append(weatherImage);
+
+    var cardTemp = $("<p>");
+    cardTemp.addClass("card-text");
+    cardTemp.text("Temp: "+temp+"°F");
+    cardBody.append(cardTemp);
+
+    var cardWind = $("<p>");
+    cardWind.addClass("card-text");
+    cardWind.text("Wind: "+wind+" MPH");
+    cardBody.append(cardWind);
+
+    var cardHumidity = $("<p>");
+    cardHumidity.addClass("card-text");
+    cardHumidity.text("Humidity: "+humidity+"%");
+    cardBody.append(cardHumidity);
+
+    weatherContentElement.append(cardToAdd);
+}
+
+/*
+ *  Displays the 5-day forecast for the selected city, given the data blob we recieve from OpenWeather.
+ */
+function displayFiveDayForecast(data) {
+    
+}
+
 /* 
  *  This function fetches the coordinates for the entered city after the user submits a city name.
  *  When we fetch coordinate for a city we must:
- *      1. Fetch the data for the city
- *      2. If there's some error code - if the api can't determine the city - we want to communicate that to the user.
+ *      1. Fetch the data for the city.
+ *      2. If there's some error code - if the api can't determine the city - we want to do something.
  *      3. Otherwise, we'll get the latitude and longitude from the return data, and create a new city button.
  */
 function fetchCoordinates(cityName) {
+    /* 1. Fetch the data for the city. */
     var requestUrl = 'http://api.openweathermap.org/geo/1.0/direct?q='+cityName+"&appid="+openWeatherApiKey;
 
     fetch(requestUrl)
         .then(function (response) {
+            /* 2. If there's some error code - if the api can't determine the city - we want to do something. */
             console.log("response", response);
             return response.json();
         })
         .then(function (data) {
-            console.log("data",data);
+            /* 3. Otherwise, we'll get the latitude and longitude from the return data, and create a new city button. */
             dataObject = data[0];
-            console.log(dataObject);
             var lat = dataObject.lat;
             var lon = dataObject.lon;
             var cityButtonToAdd = createCityButton(cityName, lat, lon);
@@ -137,8 +228,29 @@ function fetchCoordinates(cityName) {
         });
 }
 
-function fetchWeather(lat, lon) {
-    var requestUrl = 'https://api.github.com/orgs/nodejs/repos';
+/* Fetches the current weather */
+function fetchCurrentWeather(lat, lon) {
+    var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
+    console.log(requestUrl);
+
+    fetch(requestUrl)
+    .then(function (response) {
+      console.log("response", response);
+      
+      return response.json();
+    })
+    .then(function (data) {
+      console.log("data",data)
+      displayCurrentWeather(data);
+    });
+}
+
+/*
+ *  This function fetches the 5-day forecast for the selected city.
+ */
+function fetchWeatherForecast(lat, lon) {
+    var requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
+    console.log(requestUrl);
 
     fetch(requestUrl)
       .then(function (response) {
@@ -148,6 +260,7 @@ function fetchWeather(lat, lon) {
       })
       .then(function (data) {
         console.log("data",data)
+        displayForecast(data);
       });
 }
 
@@ -159,6 +272,8 @@ function initializeWeatherDashboard() {
     renderCityList();
 }
 
+
+
 /* Loads any saved city list. If one doesn't exist, we create an empty array. */
 function loadCityList() {
     console.log("LOADING CITY LIST");
@@ -168,7 +283,7 @@ function loadCityList() {
         console.log("NO SAVED DATA EXISTS");
         cityList = [];
     } else {
-        console.log("NO SAVED DATA EXISTS");
+        console.log("SAVED DATA EXISTS");
         cityList = JSON.parse(stringifiedCityList);
         console.log(cityList);
     }
@@ -202,6 +317,7 @@ function removeCityButton(cityButtonToRemove) {
 /* Displays the city buttons in a list below the search bar */
 function renderCityList() {
     for (var i = 0; i < cityList.length; i++) {
+        /*
         var cityButton = $("<button>");
         cityButton.addClass("city-button list-button");
         cityButton.text(cityList[i].name);
@@ -219,9 +335,32 @@ function renderCityList() {
 
         closeButton.append(iconToAdd);
         cityButton.append(closeButton);
+        */
+
+        var cityName = cityList[i].name;
+        var lat = cityList[i].latitude;
+        var lon = cityList[i].longitude;
+
+        var cityButton = createCityButton(cityName, lat, lon);
 
         cityListElement.append(cityButton);
     }
+}
+
+/*
+ *  Selects the input cityButton jQuery Object.
+ *  In order to select a city button we have to:
+ *      1. Apply the selected class to style the button.
+ *      2. Fetch the weather data for the selected city.
+ */
+function select(cityButton) {
+    /* 1. Apply the selected class to style the button. */
+    cityButton.addClass("selected");
+
+    /* 2. Fetch the weather data for the selected city. */
+    var lat = cityButton.attr("lat");
+    var lon = cityButton.attr("lon");
+    fetchCurrentWeather(lat, lon);
 }
 
 /* Logic for the submit button on click */
