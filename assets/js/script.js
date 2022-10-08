@@ -172,8 +172,9 @@ function displayCurrentWeather(data) {
     console.log(cityName);
 
     var forecastTimeUTC = data.dt;
+    var timezoneOffset = data.timezone;
     console.log(forecastTimeUTC);
-    var forecastMoment = moment.unix(forecastTimeUTC);
+    var forecastMoment = moment.unix(forecastTimeUTC+timezoneOffset).utc();
 
     var temp = data.main.temp;
     var wind = data.wind.speed;
