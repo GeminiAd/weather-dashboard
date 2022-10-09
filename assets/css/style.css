@@ -84,6 +84,14 @@ button:focus {
     right: 0;
 }
 
-#forecast-card-title {
-    
+.modal-dismiss {
+    background-color: slateblue;
+    color: white;
+
+    font-weight: bold;
+}
+
+.modal-dismiss:hover {
+    background-color: darkslateblue;
+    color: white;
 }
