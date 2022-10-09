@@ -27,6 +27,7 @@ var cityListElement = $("#city-list");
 var submitButtonElement = $(".submit-button");
 var cityTextInputElement = $("#cityText");
 var weatherContentElement = $("#weather-content");
+var modalElement = $("#exampleModal");
 var cityInputFormElement = document.getElementById("city-input-form"); // jQuery doesn't have a form reset function, so I have to use regular JS here.
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
@@ -42,7 +43,12 @@ var cityList;
  *      4. Write the new city list to storage.
  */
 function addCityButton(cityButtonToAdd) {
-    var cityName = cityButtonToAdd.text();
+    /*
+     *  I need this weird call below so that I don't grab the text of the span thats a child of the close button. Sooo annoying. 
+     *  The next project I do, I'm switching to the newest bootstrap. It seems like they handle close buttons a lot better.
+     */
+    var cityName = $(cityButtonToAdd.contents()[0]).text();
+    console.log(cityName);
     var lat = cityButtonToAdd.attr("lat");
     var lon = cityButtonToAdd.attr("lon");
     cityToAdd = new City(cityName, lat, lon);
@@ -93,7 +99,7 @@ function cityButtonOnClick(event) {
  *  so we have to check for that. If the city button that was clicked was selected, we want to deselect it so that the weather content area is cleared.
  *  If the city is selected, we also want to remove the button and then select the first button in the list.
  *  When the close button is clicked, we need to:
- *      1. See if it was the icon that was clicked. If so, set the close button accordingly.
+ *      1. See if it was the span element that was clicked. If so, set the close button accordingly.
  *      2. Get the parent of the close button, the city button.
  *      3. Remove the city button from the DOM and our saved list.
  *      4. If the city button was selected, we want to deselect it to clear the weather content window and we want to select the first city in the list.
@@ -102,8 +108,8 @@ function closeButtonOnClick(event) {
     var closeButtonElement;
     var clickedElement = $(event.target);
 
-    /* 1. See if it was the icon that was clicked. If so, set the close button accordingly. */
-    if (clickedElement.is("i")) {
+    /* 1. See if it was the span element that was clicked. If so, set the close button accordingly. */
+    if (clickedElement.is("span")) {
         closeButtonElement = clickedElement.parent();
     } else {
         closeButtonElement = clickedElement;
@@ -143,17 +149,34 @@ function createCityButton(cityName, lat, lon) {
     cityButton.on("click", cityButtonOnClick);
 
     /* 2. Create the close button, append it to the city button element. */
+    /*
     var closeButton = $("<button>");
     closeButton.attr("type", "button");
     closeButton.attr("aria-label", "Close");
     closeButton.addClass("close");
     closeButton.on("click", closeButtonOnClick);
     cityButton.append(closeButton);
+    */
+
+    var closeButton = $("<button>");
+    closeButton.attr("type", "button");
+    closeButton.attr("aria-label", "Close");
+    closeButton.addClass("close btn-close");
+    closeButton.on("click", closeButtonOnClick);
+    cityButton.append(closeButton);
 
     /* 3. Create the close icon, append it to the close button element. */
+    /*
     var iconToAdd = $("<i>");
     iconToAdd.addClass("fas fa-times");
     closeButton.append(iconToAdd);
+    */
+    var spanToAdd = $("<span>");
+    spanToAdd.html("&times;");
+    spanToAdd.attr("aria-hidden", "true");
+    spanToAdd.addClass("align-text-top px-2");
+    closeButton.append(spanToAdd);
+    
 
     /* 4. Return the city button jQuery Object. */
     return cityButton;
@@ -182,11 +205,9 @@ function deselect() {
  */
 function displayCurrentWeather(data) {
     var cityName = data.name;
-    console.log(cityName);
 
     var forecastTimeUTC = data.dt;
     var timezoneOffset = data.timezone;
-    console.log(forecastTimeUTC);
     var forecastMoment = moment.unix(forecastTimeUTC+timezoneOffset).utc();
 
     var temp = data.main.temp;
@@ -270,7 +291,6 @@ function displayFiveDayForecast(data) {
         var forecastDayOfYear = forecastTime.dayOfYear();
 
         if (((forecastDayOfYear - currentDayOfYear) > 0) && (forecastHour === 15)) {
-            console.log(forecastTime.format("(dddd, MMMM Do, YYYY   HH:mm:ss)"));
             var weatherIconName = dataList[i].weather[0].icon;
 
             /* If the weather icon given is for night, let's change it to the day icon instead. */
@@ -336,7 +356,12 @@ function fetchCoordinates(cityName) {
         .then(function (response) {
             /* 2. If there's some error code - if the api can't determine the city - we want to do something. */
             console.log("response", response);
-            return response.json();
+
+            if (response.ok) {
+                return response.json();
+            } else {
+                Promise.reject(response);
+            }
         })
         .then(function (data) {
             /* 3. Otherwise, we'll get the latitude and longitude from the return data, and create a new city button. */
@@ -345,6 +370,10 @@ function fetchCoordinates(cityName) {
             var lon = dataObject.lon;
             var cityButtonToAdd = createCityButton(cityName, lat, lon);
             addCityButton(cityButtonToAdd);
+        })
+        .catch(function (response) {
+            console.log("RESPONSE REJECTED");
+            modalElement.modal("show");
         });
 }
 
@@ -404,6 +433,7 @@ function loadCityList() {
     } else {
         cityList = JSON.parse(stringifiedCityList);
     }
+    console.log(cityList);
 }
 
 /* 
@@ -423,9 +453,7 @@ function removeCityButton(cityButtonToRemove) {
     var lon = cityButtonToRemove.attr("lon");
     var cityToRemove = new City(cityName, lat, lon);
     index = cityList.findIndex(City.equals, cityToRemove);
-    console.log(index);
     cityList.splice(index, 1)
-    console.log(cityList);
 
     /* 3. Write the updated city list to storage. */
     writeCityList();
@@ -466,15 +494,16 @@ function select(cityButton) {
  *  is also used in the event that a selected city is removed from our list of cities.
  */
 function selectFirstCity() {
-    var cities = cityListElement.children();
-    var firstCity = cities.eq(0).eq(0);
-    select(firstCity);
+    if (!cityListElement.is(":empty")) {
+        var cities = cityListElement.children();
+        var firstCity = cities.eq(0).eq(0);
+        select(firstCity);
+    }
 }
 
 /* Logic for the submit button on click */
 function submitButtonClick(event) {
     event.preventDefault();
-    console.log("SUBMIT BUTTON CLICK");
     var cityName = cityTextInputElement.val();
 
     fetchCoordinates(cityName);
@@ -488,8 +517,8 @@ function submitButtonClick(event) {
  *      2. Save the stringified list.
  */
 function writeCityList() {
+    console.log(cityList);
     var stringifiedCityList = JSON.stringify(cityList);
-    console.log(stringifiedCityList);
     localStorage.setItem("weatherCityList", stringifiedCityList);
 }
 
