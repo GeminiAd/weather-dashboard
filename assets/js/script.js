@@ -433,7 +433,6 @@ function loadCityList() {
     } else {
         cityList = JSON.parse(stringifiedCityList);
     }
-    console.log(cityList);
 }
 
 /* 
