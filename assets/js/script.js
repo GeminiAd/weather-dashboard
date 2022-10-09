@@ -88,25 +88,38 @@ function cityButtonOnClick(event) {
     }
 }
 
+/*
+ *  Logic for clicking the close button goes here. Becuase of event delegation, when the close icon is clicked, event.target is the close icon,
+ *  so we have to check for that. If the city button that was clicked was selected, we want to deselect it so that the weather content area is cleared.
+ *  If the city is selected, we also want to remove the button and then select the first button in the list.
+ *  When the close button is clicked, we need to:
+ *      1. See if it was the icon that was clicked. If so, set the close button accordingly.
+ *      2. Get the parent of the close button, the city button.
+ *      3. Remove the city button from the DOM and our saved list.
+ *      4. If the city button was selected, we want to deselect it to clear the weather content window and we want to select the first city in the list.
+ */
 function closeButtonOnClick(event) {
-    console.log("CLOSE BUTTON HIT");
-
     var closeButtonElement;
     var clickedElement = $(event.target);
 
+    /* 1. See if it was the icon that was clicked. If so, set the close button accordingly. */
     if (clickedElement.is("i")) {
         closeButtonElement = clickedElement.parent();
     } else {
         closeButtonElement = clickedElement;
     }
 
+    /* 2. Get the parent of the close button, the city button. */
     var cityButtonElement = closeButtonElement.parent();
 
+    /* 3. Remove the city button from the DOM and our saved list. */
+    removeCityButton(cityButtonElement);
+
+    /* 4. If the city button was selected, we want to deselect it to clear the weather content window and we want to select the first city in the list. */
     if (cityButtonElement.is(".selected")) {
         deselect();
+        selectFirstCity();
     }
-
-    removeCityButton(cityButtonElement);
 }
 
 /* 
@@ -378,6 +391,7 @@ function initializeWeatherDashboard() {
 
     loadCityList();
     renderCityList();
+    selectFirstCity();
 }
 
 
@@ -445,6 +459,16 @@ function select(cityButton) {
     var lon = cityButton.attr("lon");
 
     fetchCurrentWeather(lat, lon);
+}
+
+/*
+ *  This function selects the first button in the city button list. This function is used when the weather dashboard is initially loaded, and
+ *  is also used in the event that a selected city is removed from our list of cities.
+ */
+function selectFirstCity() {
+    var cities = cityListElement.children();
+    var firstCity = cities.eq(0).eq(0);
+    select(firstCity);
 }
 
 /* Logic for the submit button on click */
