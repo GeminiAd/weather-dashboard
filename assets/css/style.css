@@ -60,18 +60,16 @@ button:focus {
     color: white;
 }
 
-.close {
+.btn-close {
     position: absolute;
 
-    font-size: 1em;
+    right: 0;
+    top: .18em;
 
     color: white;
-
-    right: .5em;
-    top: 30%;
 }
 
-.close:hover {
+.btn-close:hover {
     color: white;
 }
 
