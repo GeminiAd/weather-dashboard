@@ -1,5 +1,7 @@
 :root {
     --dark: darkslateblue;
+    --forecast-card-dark: rgb(46, 53, 59);
+    --light: lightslategrey;
 }
 
 header {
@@ -101,5 +103,12 @@ button:focus {
 }
 
 .modal-title {
+    color: var(--dark);
+
     font-weight: bold;
+}
+
+.forecast-card {
+    background-color: var(--forecast-card-dark);
+    color: white;
 }

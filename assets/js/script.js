@@ -305,7 +305,7 @@ function displayFiveDayForecast(data) {
             var humidity = dataList[i].main.humidity;
 
             var cardToAdd = $("<div>");
-            cardToAdd.addClass("card col m-3");
+            cardToAdd.addClass("card col m-3 forecast-card");
             rowToAdd.append(cardToAdd);
 
             var cardBody = $("<div>");
