@@ -55,9 +55,6 @@ function addCityButton(cityButtonToAdd) {
         cityListElement.prepend(cityButtonToAdd);
 
         /* 3. Add a new City to the beginning of our city list. */
-        var cityName = cityButtonToAdd.text();
-        var lat = cityButtonToAdd.attr("lat");
-        var lon = cityButtonToAdd.attr("lon");
         cityList.unshift(cityToAdd);
 
         /* 4. Write the new city list to storage. */
