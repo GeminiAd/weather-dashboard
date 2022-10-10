@@ -20,7 +20,7 @@ h1 {
 }
 
 #city-search-label {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -124,7 +124,7 @@ button:focus {
 }
 
 i {
-  font-size: 44px;
+  font-size: 38px;
 
   color: white;
 
@@ -155,7 +155,11 @@ i {
     }
 
     h1 {
-        font-size: 36px;
+        font-size: 34px;
+    }
+
+    h2 {
+        font-size: 28px;
     }
 
     i {

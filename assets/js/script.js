@@ -141,6 +141,7 @@ function createCityButton(cityName, lat, lon) {
     cityButton.attr("city-name", cityName);
     cityButton.text(cityName);
     cityButton.on("click", cityButtonOnClick);
+    cityButton.on("touchstart", cityButtonOnClick);
 
     cityButton.on("mouseenter", function () {
         $(this).addClass("hover");
