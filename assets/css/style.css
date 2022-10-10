@@ -79,15 +79,19 @@ button:focus {
     color: white;
 }
 
-#current-weather-card-body {
+#current-weather-card {
     position: relative;
+}
+
+#current-weather-card-body {
+
 }
 
 #current-weather-icon {
     position: absolute;
 
-    top: 0;
     right: 0;
+    bottom: 0;
 }
 
 .modal-dismiss {
@@ -119,4 +123,21 @@ button:focus {
 .sortable-drag {
     background-color: slateblue;
     color: white;
+}
+
+@media (max-width: 1200px) {
+    .forecast-weather-icon {
+        position: absolute;
+
+        top: 25%;
+        right: 0;
+    }
+
+    .forecast-card {
+        margin: .5em;
+    }
+
+    #current-weather-icon {
+        transform: translate(0, 20%);
+    }
 }
