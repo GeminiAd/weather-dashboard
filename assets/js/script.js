@@ -43,12 +43,7 @@ var cityList;
  *      4. Write the new city list to storage.
  */
 function addCityButton(cityButtonToAdd) {
-    /*
-     *  I need this weird call below so that I don't grab the text of the span thats a child of the close button. Sooo annoying. 
-     *  The next project I do, I'm switching to the newest bootstrap. It seems like they handle close buttons a lot better.
-     */
-    var cityName = $(cityButtonToAdd.contents()[0]).text();
-    console.log(cityName);
+    var cityName = cityButtonToAdd.attr("city-name");
     var lat = cityButtonToAdd.attr("lat");
     var lon = cityButtonToAdd.attr("lon");
     cityToAdd = new City(cityName, lat, lon);
@@ -68,11 +63,6 @@ function addCityButton(cityButtonToAdd) {
         /* 4. Write the new city list to storage. */
         writeCityList();
     }
-}
-
-/* Adds the mouse hover event. Only when I'm dragging elements do I remove the hover property from the city buttons as it looks weird. */
-function addMouseHover() {
-    cityListElement.children().addClass("hoverable");
 }
 
 /* 
@@ -512,7 +502,7 @@ function removeCityButton(cityButtonToRemove) {
     cityButtonToRemove.remove();
 
     /* 2. Remove the city from our list of saved cities. */
-    var cityName = cityButtonToRemove.text();
+    var cityName = cityButtonToRemove.attr("city-name");
     var lat = cityButtonToRemove.attr("lat");
     var lon = cityButtonToRemove.attr("lon");
     var cityToRemove = new City(cityName, lat, lon);
@@ -521,12 +511,6 @@ function removeCityButton(cityButtonToRemove) {
 
     /* 3. Write the updated city list to storage. */
     writeCityList();
-}
-
-/* Removes the mouse hover event from the city buttons. */
-function removeMouseHover() {
-    console.log("REMOVING MOUSE HOVER");
-    cityListElement.children().removeClass("hoverable");
 }
 
 /* Displays the city buttons in a list below the search bar */
