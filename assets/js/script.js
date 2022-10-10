@@ -362,7 +362,7 @@ function displayFiveDayForecast(data) {
  */
 function fetchCoordinates(cityName) {
     /* 1. Fetch the data for the city. */
-    var requestUrl = 'http://api.openweathermap.org/geo/1.0/direct?q='+cityName+"&appid="+openWeatherApiKey;
+    var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q='+cityName+"&appid="+openWeatherApiKey;
 
     fetch(requestUrl)
         .then(function (response) {
@@ -411,7 +411,7 @@ function fetchCurrentWeather(lat, lon) {
  *  This function fetches the 5-day forecast for the selected city.
  */
 function fetchFiveDayForecast(lat, lon) {
-    var requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
+    var requestUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
     fetch(requestUrl)
       .then(function (response) {
