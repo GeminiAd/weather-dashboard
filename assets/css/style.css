@@ -56,7 +56,7 @@ button:focus {
     position: relative;
 }
 
-.city-button:hover {
+.hover {
     background-color: slateblue;
     color: white;
 }
@@ -103,12 +103,20 @@ button:focus {
 }
 
 .modal-title {
-    color: var(--dark);
-
     font-weight: bold;
 }
 
 .forecast-card {
     background-color: var(--forecast-card-dark);
+    color: white;
+}
+
+.sortable-ghost {
+    background-color: slateblue;
+    color: white;
+}
+
+.sortable-drag {
+    background-color: slateblue;
     color: white;
 }

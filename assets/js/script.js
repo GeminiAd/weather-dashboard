@@ -70,6 +70,11 @@ function addCityButton(cityButtonToAdd) {
     }
 }
 
+/* Adds the mouse hover event. Only when I'm dragging elements do I remove the hover property from the city buttons as it looks weird. */
+function addMouseHover() {
+    cityListElement.children().addClass("hoverable");
+}
+
 /* 
  *  Logic for the city button on click.
  *  When the city button is clicked we need to:
@@ -145,8 +150,25 @@ function createCityButton(cityName, lat, lon) {
     cityButton.addClass("city-button list-button");
     cityButton.attr("lat", lat);
     cityButton.attr("lon", lon);
+    cityButton.attr("city-name", cityName);
     cityButton.text(cityName);
     cityButton.on("click", cityButtonOnClick);
+
+    cityButton.on("mouseenter", function () {
+        $(this).addClass("hover");
+    });
+    cityButton.on("mouseleave", function () {
+        $(this).removeClass("hover");
+    });
+    cityButton.on("dragstart", function() {
+        cityListElement.children().removeClass("hover");
+    });
+    cityButton.on("dragend", function () {
+        $(this).removeClass("hover");
+    });
+    cityButton.on("dragleave", function () {
+        $(this).removeClass("hover");
+    });
 
     /* 2. Create the close button, append it to the city button element. */
     /*
@@ -414,6 +436,48 @@ function fetchFiveDayForecast(lat, lon) {
       });
 }
 
+/* 
+ *  This function makes the city buttons draggable/sortable. I'm saving each city in an array called city list, with the city at index 0
+ *  automatically selected when the user starts the application. So, if the user drags the city button to the top of the list, for instance,
+ *  I need to update the city list so that the dragged city button is removed from its old position and added to its new position, at index 0,
+ *  so that the next time the user starts the application that change is saved and the dragged city is displayed first.
+ * 
+ *  To make the city buttons draggable/sortable, I'm using the third party API SortableJS: 
+ *  https://github.com/SortableJS/Sortable
+ */
+function initializeSortables() {
+    var el = document.getElementById("city-list");
+    var sortable = Sortable.create(el, {
+        ghostClass: "sortable-ghost",
+        dragClass: "sortable-drag",
+
+        /* 
+         *  When the city button is dragged I need to:
+         *      1. Remove the City from its old index.
+         *      2. Insert the city at its new index
+         */
+        onEnd: function (event) {
+            //console.log(event.clone);
+            var cityName = $(event.clone).attr("city-name");
+            //console.log(cityName);
+            var lat = $(event.clone).attr("lat");
+            //console.log(lat);
+            var lon = $(event.clone).attr("lon");
+            //console.log(lon);
+
+            /* 1. Remove the City from its old index. */
+            cityList.splice(event.oldIndex, 1);
+            console.log("Old Index: "+event.oldIndex);
+
+            cityList.splice(event.newIndex, 0, new City(cityName, lat, lon));
+            console.log("New Index: "+event.newIndex);
+
+            console.log(cityList);
+            writeCityList();
+        }
+    });
+}
+
 /* All one-time actions we need to do to when the application is first run goes here. */
 function initializeWeatherDashboard() {
     submitButtonElement.on("click", submitButtonClick);
@@ -421,6 +485,7 @@ function initializeWeatherDashboard() {
     loadCityList();
     renderCityList();
     //selectFirstCity();
+    initializeSortables();
 }
 
 
@@ -456,6 +521,12 @@ function removeCityButton(cityButtonToRemove) {
 
     /* 3. Write the updated city list to storage. */
     writeCityList();
+}
+
+/* Removes the mouse hover event from the city buttons. */
+function removeMouseHover() {
+    console.log("REMOVING MOUSE HOVER");
+    cityListElement.children().removeClass("hoverable");
 }
 
 /* Displays the city buttons in a list below the search bar */
