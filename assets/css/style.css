@@ -149,13 +149,13 @@ i {
     }
 
     #current-weather-icon {
-        transform: translate(20%, 20%);
+        transform: translate(15%, 15%);
     }
 }
 
 @media (max-width: 520px) {
     h1 {
-        font-size: 36px;
+        font-size: 34px;
     }
 
     #city-search-label {
