@@ -28,6 +28,7 @@ var submitButtonElement = $(".submit-button");
 var cityTextInputElement = $("#cityText");
 var weatherContentElement = $("#weather-content");
 var modalElement = $("#exampleModal");
+var modalTextElement = $(".modal-body p");
 var cityInputFormElement = document.getElementById("city-input-form"); // jQuery doesn't have a form reset function, so I have to use regular JS here.
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
@@ -383,7 +384,7 @@ function fetchCoordinates(cityName) {
             addCityButton(cityButtonToAdd);
         })
         .catch(function (response) {
-            modalElement.modal("show");
+            showModal(cityName);
         });
 }
 
@@ -473,6 +474,11 @@ function initializeWeatherDashboard() {
     renderCityList();
     //selectFirstCity();
     initializeSortables();
+
+    modalElement.on("show.bs.modal", function(event) {
+        console.log("MODAL TRIGGERED");
+        console.log(event);
+    });
 }
 
 
@@ -550,6 +556,11 @@ function selectFirstCity() {
         var firstCity = cities.eq(0).eq(0);
         select(firstCity);
     }
+}
+
+function showModal(cityName) {
+    modalTextElement.text("Error: \""+cityName+"\" is not a recognized city. Enter a valid city in the city search box.");
+    modalElement.modal("show");
 }
 
 /* Logic for the submit button on click */
