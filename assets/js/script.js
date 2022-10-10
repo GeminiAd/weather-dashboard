@@ -354,7 +354,7 @@ function displayFiveDayForecast(data) {
  *  This function fetches the coordinates for the entered city after the user submits a city name.
  *  When we fetch coordinate for a city we must:
  *      1. Fetch the data for the city.
- *      2. If there's some error code - if the api can't determine the city - we want to do something.
+ *      2. If there's some error code - if the api can't determine the city - we want to show the invalid city modal dialog.
  *      3. Otherwise, we'll get the latitude and longitude from the return data, and create a new city button.
  */
 function fetchCoordinates(cityName) {
@@ -363,12 +363,12 @@ function fetchCoordinates(cityName) {
 
     fetch(requestUrl)
         .then(function (response) {
-            /* 2. If there's some error code - if the api can't determine the city - we want to do something. */
             console.log("response", response);
 
             if (response.ok) {
                 return response.json();
             } else {
+                /*2. If there's some error code - if the api can't determine the city - we want to show the invalid city modal dialog. */
                 Promise.reject(response);
             }
         })
@@ -381,7 +381,6 @@ function fetchCoordinates(cityName) {
             addCityButton(cityButtonToAdd);
         })
         .catch(function (response) {
-            console.log("RESPONSE REJECTED");
             modalElement.modal("show");
         });
 }
@@ -413,7 +412,7 @@ function fetchFiveDayForecast(lat, lon) {
 
     fetch(requestUrl)
       .then(function (response) {
-        console.log("response", response);
+        //console.log("response", response);
         
         return response.json();
       })
@@ -459,7 +458,6 @@ function initializeSortables() {
             cityList.splice(event.newIndex, 0, new City(cityName, lat, lon));
             console.log("New Index: "+event.newIndex);
 
-            console.log(cityList);
             writeCityList();
         }
     });
@@ -568,7 +566,6 @@ function submitButtonClick(event) {
  *      2. Save the stringified list.
  */
 function writeCityList() {
-    console.log(cityList);
     var stringifiedCityList = JSON.stringify(cityList);
     localStorage.setItem("weatherCityList", stringifiedCityList);
 }
