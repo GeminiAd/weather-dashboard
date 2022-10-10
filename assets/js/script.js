@@ -227,6 +227,7 @@ function displayCurrentWeather(data) {
 
     var cardToAdd = $("<div>");
     cardToAdd.addClass("card my-3");
+    cardToAdd.attr("id", "current-weather-card");
 
     var cardBody = $("<div>");
     cardBody.addClass("card-body");
@@ -314,11 +315,11 @@ function displayFiveDayForecast(data) {
             var humidity = dataList[i].main.humidity;
 
             var cardToAdd = $("<div>");
-            cardToAdd.addClass("card col m-3 forecast-card");
+            cardToAdd.addClass("card col-xl m-xl-3 forecast-card");
             rowToAdd.append(cardToAdd);
 
             var cardBody = $("<div>");
-            cardBody.addClass("card-body d-flex flex-column align-items-center");
+            cardBody.addClass("card-body d-flex flex-column align-items-xl-center");
             cardToAdd.append(cardBody);
 
             var cardHeader = $("<h4>");
@@ -328,6 +329,7 @@ function displayFiveDayForecast(data) {
 
             var weatherIcon = $("<img>");
             weatherIcon.attr("src", weatherIconPath);
+            weatherIcon.addClass("forecast-weather-icon");
             cardBody.append(weatherIcon);
 
             var cardTemp = $("<p>");
