@@ -132,6 +132,10 @@ i {
   right: .5em;
 }
 
+#weather-content-separator {
+    display: none;
+}
+
 @media (max-width: 1200px) {
     .forecast-weather-icon {
         position: absolute;
@@ -145,24 +149,24 @@ i {
     }
 
     #current-weather-icon {
-        transform: translate(0, 20%);
+        transform: translate(20%, 20%);
     }
 }
 
 @media (max-width: 520px) {
-    header {
-        justify-content: space-between;
-    }
-
     h1 {
-        font-size: 34px;
+        font-size: 36px;
     }
 
-    h2 {
+    #city-search-label {
         font-size: 28px;
     }
 
     i {
         font-size: 28px;
+    }
+
+    #weather-content-separator {
+        display: block;
     }
 }
