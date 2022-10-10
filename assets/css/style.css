@@ -149,7 +149,7 @@ i {
     }
 
     #current-weather-icon {
-        transform: translate(15%, 15%);
+        transform: translate(5%, 15%);
     }
 }
 
@@ -159,7 +159,7 @@ i {
     }
 
     #city-search-label {
-        font-size: 28px;
+        font-size: 26px;
     }
 
     i {
@@ -168,5 +168,9 @@ i {
 
     #weather-content-separator {
         display: block;
+    }
+
+    .forecast-weather-icon {
+        transform: translate(0, 45%);
     }
 }
