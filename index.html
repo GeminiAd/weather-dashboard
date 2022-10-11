@@ -15,11 +15,13 @@
 <body>
     <header>
         <h1 class="font-weight-bold">Weather Dashboard</h1>
+        <i id="city-icon" class="fa-solid fa-city d-none"></i>
+        <i id="weather-icon" class="fa-solid fa-sun d-sm-none"></i>
     </header>
 
     <main class="container-fluid">
         <div class="row">
-            <section id="city-bar" class="col-sm-5 col-md-4 col-lg-3 col-xl-2 mt-2">
+            <section id="city-bar" class="col-sm-5 col-md-4 col-lg-3 col-xl-2 mt-2 d-sm-block">
                 <form id="city-input-form">
                     <div class="form-group">
                         <label id="city-search-label" for="cityText">Search for a City:</label>
@@ -52,9 +54,8 @@
 
                 <!-- City buttons go here. -->
                 <div id="city-list"></div>
-                <hr id="weather-content-separator"/>
             </section>
-            <section id="weather-content" class="col-sm-7 col-md-8 col-lg-9 col-xl-10"></section>
+            <section id="weather-content" class="col-sm-7 col-md-8 col-lg-9 col-xl-10 d-none d-sm-block"></section>
         </div>
     </main>
 

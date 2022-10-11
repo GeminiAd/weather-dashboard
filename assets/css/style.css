@@ -131,12 +131,16 @@ button:focus {
 }
 
 i {
-  font-size: 38px;
+  font-size: 28px;
 
   color: white;
 
   position: absolute;
   right: .5em;
+}
+
+i:hover {
+    cursor: pointer;
 }
 
 #weather-content-separator {
@@ -161,6 +165,10 @@ i {
 }
 
 @media (max-width: 520px) {
+    header {
+        justify-content: space-between;
+    }
+
     h1 {
         font-size: 34px;
     }
@@ -171,10 +179,6 @@ i {
 
     i {
         font-size: 28px;
-    }
-
-    #weather-content-separator {
-        display: block;
     }
 
     .forecast-weather-icon {
