@@ -365,9 +365,7 @@ function fetchCoordinates(cityName) {
     /* 1. Fetch the data for the city. */
     var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q='+cityName+"&appid="+openWeatherApiKey;
 
-    fetch(requestUrl, {
-        credentials: "include"
-    })
+    fetch(requestUrl)
         .then(function (response) {
             //console.log("response", response);
 
@@ -395,9 +393,7 @@ function fetchCoordinates(cityName) {
 function fetchCurrentWeather(lat, lon) {
     var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
-    fetch(requestUrl, {
-        credentials: "include"
-    })
+    fetch(requestUrl)
     .then(function (response) {
       //console.log("response", response);
       
@@ -418,9 +414,7 @@ function fetchCurrentWeather(lat, lon) {
 function fetchFiveDayForecast(lat, lon) {
     var requestUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
-    fetch(requestUrl, {
-        credentials: "include"
-    })
+    fetch(requestUrl)
       .then(function (response) {
         //console.log("response", response);
         
