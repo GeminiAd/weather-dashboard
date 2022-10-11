@@ -29,6 +29,10 @@ var cityTextInputElement = $("#cityText");
 var weatherContentElement = $("#weather-content");
 var modalElement = $("#exampleModal");
 var modalTextElement = $(".modal-body p");
+var cityIconElement = $("#city-icon");
+var weatherIconElement = $("#weather-icon");
+var citySelectBarElement = $("#city-bar");
+
 var cityInputFormElement = document.getElementById("city-input-form"); // jQuery doesn't have a form reset function, so I have to use regular JS here.
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
@@ -89,6 +93,19 @@ function cityButtonOnClick(event) {
             select(clickedElement);
         }
     }
+}
+
+function cityIconClick(event) {
+    console.log("CITY ICON CLICKED");
+
+    weatherContentElement.addClass("d-none");
+    citySelectBarElement.removeClass("d-none");
+
+    cityIconElement.removeClass("d-sm-none");
+    cityIconElement.addClass("d-none");
+
+    weatherIconElement.removeClass("d-none");
+    weatherIconElement.addClass("d-sm-none");
 }
 
 /*
@@ -480,6 +497,8 @@ function initializeSortables() {
 /* All one-time actions we need to do to when the application is first run goes here. */
 function initializeWeatherDashboard() {
     submitButtonElement.on("click", submitButtonClick);
+    cityIconElement.on("click", cityIconClick);
+    weatherIconElement.on("click", weatherIconClick);
 
     loadCityList();
     renderCityList();
@@ -576,6 +595,19 @@ function submitButtonClick(event) {
 
     fetchCoordinates(cityName);
     cityInputFormElement.reset();
+}
+
+function weatherIconClick(event) {
+    console.log("WEATHER BUTTON CLICKED");
+
+    citySelectBarElement.addClass("d-none");
+    weatherContentElement.removeClass("d-none");
+
+    weatherIconElement.removeClass("d-sm-none");
+    weatherIconElement.addClass("d-none");
+
+    cityIconElement.removeClass("d-none");
+    cityIconElement.addClass("d-sm-none");
 }
 
 /* 
