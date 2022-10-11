@@ -225,7 +225,7 @@ function displayCurrentWeather(data) {
     var wind = data.wind.speed;
     var humidity = data.main.humidity;
     var weatherIcon = data.weather[0].icon;
-    var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIcon+"@4x.png";
+    var weatherIconPath = "https://openweathermap.org/img/wn/"+weatherIcon+"@4x.png";
 
     var cardToAdd = $("<div>");
     cardToAdd.addClass("card my-3");
@@ -310,7 +310,7 @@ function displayFiveDayForecast(data) {
                 weatherIconName = weatherIconName.replace("n", "d");
             }
 
-            var weatherIconPath = "http://openweathermap.org/img/wn/"+weatherIconName+"@2x.png";
+            var weatherIconPath = "https://openweathermap.org/img/wn/"+weatherIconName+"@2x.png";
 
             var temp = dataList[i].main.temp;
             var wind = dataList[i].wind.speed;
@@ -367,7 +367,7 @@ function fetchCoordinates(cityName) {
 
     fetch(requestUrl)
         .then(function (response) {
-            console.log("response", response);
+            //console.log("response", response);
 
             if (response.ok) {
                 return response.json();
@@ -395,12 +395,12 @@ function fetchCurrentWeather(lat, lon) {
 
     fetch(requestUrl)
     .then(function (response) {
-      console.log("response", response);
+      //console.log("response", response);
       
       return response.json();
     })
     .then(function (data) {
-      console.log("data",data)
+      //console.log("data",data)
       displayCurrentWeather(data);
       
       // I have to include the fetch call to get the five-day forecast here or else sometimes the forecast arrives before the current weather.
@@ -421,7 +421,7 @@ function fetchFiveDayForecast(lat, lon) {
         return response.json();
       })
       .then(function (data) {
-        console.log("data",data)
+        //console.log("data",data)
         displayFiveDayForecast(data);
       });
 }
