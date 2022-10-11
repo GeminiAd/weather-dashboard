@@ -429,7 +429,7 @@ function fetchFiveDayForecast(lat, lon) {
         return response.json();
       })
       .then(function (data) {
-        console.log("data",data)
+        //console.log("data",data)
         displayFiveDayForecast(data);
       });
 }
