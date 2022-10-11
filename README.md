@@ -28,6 +28,8 @@ This is is a fairly simple web application that gives the current weather and fi
 
 Navigate to: <https://geminiad.github.io/weather-dashboard>
 
+Enter a city name.
+
 ## Technologies Used
 
 - [Sortable.js](https://github.com/SortableJS/Sortable)
