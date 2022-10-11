@@ -180,4 +180,8 @@ i {
     .forecast-weather-icon {
         transform: translate(0, 45%);
     }
+
+    .btn-close {
+        top: .2em;
+    }
 }
