@@ -170,9 +170,10 @@ i:hover {
     }
 
     h1 {
-        width: 70%;
-        line-break: anywhere;
+        width: 50%;
         font-size: 34px;
+
+        margin-left: .5em;
     }
 
     #city-search-label {
