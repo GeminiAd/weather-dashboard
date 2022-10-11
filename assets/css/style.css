@@ -1,7 +1,14 @@
 :root {
     --dark: darkslateblue;
     --forecast-card-dark: rgb(46, 53, 59);
-    --light: lightslategrey;
+    --light: aliceblue;
+}
+
+html {
+    background-color: var(--light);
+}
+body {
+    background-color: var(--light);
 }
 
 header {
