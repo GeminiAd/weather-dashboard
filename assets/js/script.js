@@ -60,6 +60,10 @@ function addCityButton(cityButtonToAdd) {
 
         /* 4. Write the new city list to storage. */
         writeCityList();
+
+        if (cityList.length === 1) {
+            selectFirstCity();
+        }
     }
 }
 
@@ -117,7 +121,7 @@ function closeButtonOnClick(event) {
     /* 4. If the city button was selected, we want to deselect it to clear the weather content window and we want to select the first city in the list. */
     if (cityButtonElement.is(".selected")) {
         deselect();
-        //selectFirstCity();
+        selectFirstCity();
     }
 }
 
@@ -479,7 +483,7 @@ function initializeWeatherDashboard() {
 
     loadCityList();
     renderCityList();
-    //selectFirstCity();
+    selectFirstCity();
     initializeSortables();
 }
 
