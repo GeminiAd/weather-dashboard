@@ -173,6 +173,9 @@ i:hover {
         width: 50%;
         font-size: 34px;
 
+        word-wrap: normal;
+        white-space: pre-wrap;
+
         margin-left: .5em;
     }
 
