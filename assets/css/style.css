@@ -170,6 +170,8 @@ i:hover {
     }
 
     h1 {
+        width: 70%;
+        line-break: anywhere;
         font-size: 34px;
     }
 
