@@ -238,6 +238,8 @@ function displayCurrentWeather(data) {
 
     var weatherImage = $("<img>");
     weatherImage.attr("src", weatherIconPath);
+    weatherImage.attr("referrerpolicy", "strict-origin");
+    weatherImage.attr("crossorigin", "anonymous");
     weatherImage.attr("id", "current-weather-icon");
     cardBody.append(weatherImage);
 
@@ -298,7 +300,9 @@ function displayFiveDayForecast(data) {
 
     var dataList = data.list;
     for(var i = 0; i < dataList.length; i++) {
-        var forecastTime = moment(dataList[i].dt_txt);
+        //var forecastTime = moment(dataList[i].dt_txt);
+        var forecastTime = moment.unix(dataList[i].dt).utc();
+        //console.log(forecastTime.format("MM/DD/YYYY hA"));
         var forecastHour = forecastTime.hour();
         var forecastDayOfYear = forecastTime.dayOfYear();
 
@@ -331,6 +335,8 @@ function displayFiveDayForecast(data) {
 
             var weatherIcon = $("<img>");
             weatherIcon.attr("src", weatherIconPath);
+            weatherIcon.attr("referrerpolicy", "strict-origin");
+            weatherIcon.attr("crossorigin", "anonymous");
             weatherIcon.addClass("forecast-weather-icon");
             cardBody.append(weatherIcon);
 
@@ -393,7 +399,9 @@ function fetchCoordinates(cityName) {
 function fetchCurrentWeather(lat, lon) {
     var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
-    fetch(requestUrl)
+    fetch(requestUrl, {
+        cache: "no-cache"
+    })
     .then(function (response) {
       //console.log("response", response);
       
@@ -421,7 +429,7 @@ function fetchFiveDayForecast(lat, lon) {
         return response.json();
       })
       .then(function (data) {
-        //console.log("data",data)
+        console.log("data",data)
         displayFiveDayForecast(data);
       });
 }
@@ -442,7 +450,7 @@ function initializeSortables() {
         dragClass: "sortable-drag",
 
         /* 
-         *  When the city button is dragged I need to:
+         *  After the city button is dragged I need to:
          *      1. Remove the City from its old index.
          *      2. Insert the city at its new index
          */
@@ -457,10 +465,8 @@ function initializeSortables() {
 
             /* 1. Remove the City from its old index. */
             cityList.splice(event.oldIndex, 1);
-            console.log("Old Index: "+event.oldIndex);
 
             cityList.splice(event.newIndex, 0, new City(cityName, lat, lon));
-            console.log("New Index: "+event.newIndex);
 
             writeCityList();
         }
@@ -475,11 +481,6 @@ function initializeWeatherDashboard() {
     renderCityList();
     //selectFirstCity();
     initializeSortables();
-
-    modalElement.on("show.bs.modal", function(event) {
-        console.log("MODAL TRIGGERED");
-        console.log(event);
-    });
 }
 
 
