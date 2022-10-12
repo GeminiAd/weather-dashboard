@@ -4,8 +4,6 @@
 
 ------------------------------------------------------
 
-<a href="#desktop-demo">Desktop Demo</a> •
-<a href="#mobile-demo">Mobile Demo</a> •
 <a href="#description">Description</a> •
 <a href="#key-features">Key Features</a> •
 <a href="#usage">Usage</a> •
