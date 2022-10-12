@@ -95,17 +95,28 @@ function cityButtonOnClick(event) {
     }
 }
 
+/* 
+ *  Contains logic for the city icon, which only displays on mobile devices. 
+ *  When the city icon is clicked we need to:
+ *      1. Remove the weather display screen.
+ *      2. Remove the city icon
+ *      3. Display the weather icon 
+ *      4. Display the city select screen
+ */
 function cityIconClick(event) {
-    console.log("CITY ICON CLICKED");
-
+    /* 1. Remove the weather display screen. */
     weatherContentElement.addClass("d-none");
-    citySelectBarElement.removeClass("d-none");
 
+    /* 2. Remove the city icon */
     cityIconElement.removeClass("d-sm-none");
     cityIconElement.addClass("d-none");
 
+    /* 3. Display the weather icon  */
     weatherIconElement.removeClass("d-none");
     weatherIconElement.addClass("d-sm-none");
+
+    /* 4. Display the city select screen */
+    citySelectBarElement.removeClass("d-none");
 }
 
 /*
