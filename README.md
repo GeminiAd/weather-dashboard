@@ -45,7 +45,7 @@ It works just like the desktop version, only the city select and weather display
 
 ## Technologies Used
 
-- [Sortable.js](https://github.com/SortableJS/Sortable)
+- [Sortable.js](https://sortablejs.github.io/Sortable/)
 - [Font Awesome Icons](https://fontawesome.com/icons)
 - [jQuery](https://jquery.com/)
 - [Bootstrap](https://getbootstrap.com/)
