@@ -23,6 +23,7 @@ class City {
     }
 }
 
+/* The following are variables I will need later, I'm just defining them now for convenience. */
 var cityListElement = $("#city-list");
 var submitButtonElement = $(".submit-button");
 var cityTextInputElement = $("#cityText");
@@ -34,6 +35,7 @@ var weatherIconElement = $("#weather-icon");
 var citySelectBarElement = $("#city-bar");
 
 var cityInputFormElement = document.getElementById("city-input-form"); // jQuery doesn't have a form reset function, so I have to use regular JS here.
+
 var openWeatherApiKey = "cf19996b2ee225f691c3a37e5129a402";
 
 var cityList;
@@ -173,8 +175,12 @@ function createCityButton(cityName, lat, lon) {
     cityButton.attr("city-name", cityName);
     cityButton.text(cityName);
     cityButton.on("click", cityButtonOnClick);
+    
+    /* 
+     *  The city buttons were looking weird as they were being dragged due to the hover effect. The following chunk of code is my hack around that,
+     *  or else I would have just used .city-button:hover to achieve the hovering effect.
+     */
     cityButton.on("touchstart", cityButtonOnClick);
-
     cityButton.on("mouseenter", function () {
         $(this).addClass("hover");
     });
@@ -231,6 +237,19 @@ function deselect() {
 
 /*
  *  Displays the current weather for the selected city. The current weather for the selected city appears in a card above the 5-day forecast.
+ *  The classes for each div are defined that way as bootstrap 4.6x requires that for styling purposes. See:
+ *  https://getbootstrap.com/docs/4.6/components/card/
+ *
+ *  The HTML added is of the form:
+ *  <div class="card my-3" id="current-weather-card">
+ *      <div class="card-body" id="current-weather-card-body">
+ *          <img src="{weathericonpath}" referrerpolicy="strict-origin" crossorigin="anonymous" alt="Current Weather Icon" />
+ *          <h2 class="card-title">{CityName} {City Date/Time}</h2>
+ *          <p class="card-text">Temp: {temp}</p>
+ *          <p class="card-text">Wind: {wind}</p>
+ *          <p class="card-text">Humidity: {humidity}</p>
+ *      </div>
+ *  </div>
  */
 function displayCurrentWeather(data) {
     var cityName = data.name;
@@ -259,6 +278,7 @@ function displayCurrentWeather(data) {
     weatherImage.attr("referrerpolicy", "strict-origin");
     weatherImage.attr("crossorigin", "anonymous");
     weatherImage.attr("id", "current-weather-icon");
+    weatherImage.attr("alt", "Current weather icon");
     cardBody.append(weatherImage);
 
     var cardHeader = $("<h2>");
@@ -286,6 +306,64 @@ function displayCurrentWeather(data) {
 
 /*
  *  Displays the 5-day forecast for the selected city, given the data blob we recieve from OpenWeather.
+ *  The classes for each div are defined that way as bootstrap 4.6x requires that for styling purposes. See:
+ *  https://getbootstrap.com/docs/4.6/components/card/
+ *  
+ *  The HTML added is of the form:
+ *  <div class="card">
+ *      <div class="card-body">
+ *          <h3 class="card-title">5-Day Forecast:</h3>
+ *          <div class="container-fluid">
+ *              <div class="row">
+ *                  <div class="card col-xl m-xl-3 forecast-card">
+ *                      <div class="card-body d-flex flex-column align-items-xl-center">
+ *                          <h4 class="card-title">{forecast1-date}</h4>
+ *                          <img src="{forecast1-icon-path}" referrerpolicy="strict-origin" crossorigin="anonymous" alt="Forecast Weather Icon" />
+ *                          <p class="card-text">Temp: {forecast1-temp}</p>
+ *                          <p class="card-text">Wind: {forecast1-wind}</p>
+ *                          <p class="card-text">Humidity: {forecast1-humidity}</p>
+ *                      </div>
+ *                  </div>
+ *                  <div class="card col-xl m-xl-3 forecast-card">
+ *                      <div class="card-body d-flex flex-column align-items-xl-center">
+ *                          <h4 class="card-title">{forecast2-date}</h4>
+ *                          <img src="{forecast2-icon-path}" referrerpolicy="strict-origin" crossorigin="anonymous" alt="Forecast Weather Icon" />
+ *                          <p class="card-text">Temp: {forecast2-temp}</p>
+ *                          <p class="card-text">Wind: {forecast2-wind}</p>
+ *                          <p class="card-text">Humidity: {forecast2-humidity}</p>
+ *                      </div>
+ *                  </div>
+ *                  <div class="card col-xl m-xl-3 forecast-card">
+ *                      <div class="card-body d-flex flex-column align-items-xl-center">
+ *                          <h4 class="card-title">{forecast3-date}</h4>
+ *                          <img src="{forecast3-icon-path}" referrerpolicy="strict-origin" crossorigin="anonymous" alt="Forecast Weather Icon" />
+ *                          <p class="card-text">Temp: {forecast3-temp}</p>
+ *                          <p class="card-text">Wind: {forecast3-wind}</p>
+ *                          <p class="card-text">Humidity: {forecast3-humidity}</p>
+ *                      </div>
+ *                  </div>
+ *                  <div class="card col-xl m-xl-3 forecast-card">
+ *                      <div class="card-body d-flex flex-column align-items-xl-center">
+ *                          <h4 class="card-title">{forecast4-date}</h4>
+ *                          <img src="{forecast4-icon-path}" referrerpolicy="strict-origin" crossorigin="anonymous" alt="Forecast Weather Icon" />
+ *                          <p class="card-text">Temp: {forecast4-temp}</p>
+ *                          <p class="card-text">Wind: {forecast4-wind}</p>
+ *                          <p class="card-text">Humidity: {forecast4-humidity}</p>
+ *                      </div>
+ *                  </div>
+ *                  <div class="card col-xl m-xl-3 forecast-card">
+ *                      <div class="card-body d-flex flex-column align-items-xl-center">
+ *                          <h4 class="card-title">{forecast5-date}</h4>
+ *                          <img src="{forecast5-icon-path}" referrerpolicy="strict-origin" crossorigin="anonymous" alt="Forecast Weather Icon" />
+ *                          <p class="card-text">Temp: {forecast5-temp}</p>
+ *                          <p class="card-text">Wind: {forecast5-wind}</p>
+ *                          <p class="card-text">Humidity: {forecast5-humidity}</p>
+ *                      </div>
+ *                  </div>
+ *              </div>
+ *          </div>
+ *      </div>
+ *  </div>
  */
 function displayFiveDayForecast(data) {
     var fiveDayForecastCard = $("<div>");
@@ -310,8 +388,12 @@ function displayFiveDayForecast(data) {
     containerToAdd.append(rowToAdd);
 
     /* 
-     *  I say, for each data nugget we get back, we check to see if the data nugget is the next day. If it is the next day at about 3PM, we display it
-     *  as the 1-day forecast. If the data nugget is two days away at about 12, we display it as the 2-day forecast, etc.
+     *  I say, for each data nugget we get back, we check to see if the hour of the data nugget is 3PM. If it is, we display it as the 1-day forecast.
+     *  The next day at 3PM is the next forecast, etc. Sometimes we will be past 3PM, say on October 11 2022. The 5-day forecast that I get from
+     *  openweather will include the forecast for hours that are in the past, and the only forecast for the day 5 days from now is at 3AM. I don't consider
+     *  3AM a good representative of what the weather will be like during the day, so just display the 5-day forecast with the current day included. If
+     *  openweather gives me the forecast for the 5th day out, I display it, if they don't give me the forecast for the 5th day out, I don't display it.
+     *  If I'm not displaying the forecast of the day 5 days from now, I'm going to say its a flaw with openweather's API and not my program.
      */
     var now = moment();
     var currentDayOfYear = now.dayOfYear();
@@ -355,6 +437,7 @@ function displayFiveDayForecast(data) {
             weatherIcon.attr("src", weatherIconPath);
             weatherIcon.attr("referrerpolicy", "strict-origin");
             weatherIcon.attr("crossorigin", "anonymous");
+            weatherIcon.attr("alt", "Forecast weather icon");
             weatherIcon.addClass("forecast-weather-icon");
             cardBody.append(weatherIcon);
 
@@ -415,7 +498,7 @@ function fetchCoordinates(cityName) {
         });
 }
 
-/* Fetches the current weather */
+/* Fetches the current weather, then displays the current weather, and then fetches the 5-day forecast. */
 function fetchCurrentWeather(lat, lon) {
     var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
@@ -423,12 +506,10 @@ function fetchCurrentWeather(lat, lon) {
         cache: "no-cache"
     })
     .then(function (response) {
-      //console.log("response", response);
       
       return response.json();
     })
     .then(function (data) {
-      //console.log("data",data)
       displayCurrentWeather(data);
       
       // I have to include the fetch call to get the five-day forecast here or else sometimes the forecast arrives before the current weather.
