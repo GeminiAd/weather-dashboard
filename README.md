@@ -4,6 +4,18 @@
 
 ------------------------------------------------------
 
+<a href="#desktop-demo">Desktop Demo</a> •
+<a href="#mobile-demo">Mobile Demo</a> •
+<a href="#description">Description</a> •
+<a href="#key-features">Key Features</a> •
+<a href="#usage">Usage</a> •
+<a href="#technologies-used">Technologies Used</a> •
+<a href="#concepts-demonstrated">Concepts Demonstrated</a> •
+<a href="#credits">Credits</a> •
+<a href="#author">Author</a>
+
+-------------------------------------------------------
+
 ## Desktop demo:           
 
 ![Work Day Scheduler Desktop Demo](./assets/images/weather-dashboard-desktop-demo.gif)
@@ -15,14 +27,6 @@
 ![Work Day Scheduler Mobile Demo](./assets/images/weather-dashboard-mobile-demo.gif)
 
 ------------------------------------------------------
-
-<a href="#description">Description</a> •
-<a href="#key-features">Key Features</a> •
-<a href="#usage">Usage</a> •
-<a href="#technologies-used">Technologies Used</a> •
-<a href="#concepts-demonstrated">Concepts Demonstrated</a> •
-<a href="#credits">Credits</a> •
-<a href="#author">Author</a>
 
 ## Description
 
