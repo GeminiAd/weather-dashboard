@@ -164,7 +164,7 @@ i:hover {
     }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 576px) {
     header {
         justify-content: space-between;
     }
