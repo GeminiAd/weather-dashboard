@@ -251,8 +251,8 @@ function deselect() {
  *      </div>
  *  </div>
  */
-function displayCurrentWeather(data) {
-    var cityName = data.name;
+function displayCurrentWeather(cityName, data) {
+    //var cityName = data.name;
 
     var forecastTimeUTC = data.dt;
     var timezoneOffset = data.timezone;
@@ -499,7 +499,7 @@ function fetchCoordinates(cityName) {
 }
 
 /* Fetches the current weather, then displays the current weather, and then fetches the 5-day forecast. */
-function fetchCurrentWeather(lat, lon) {
+function fetchCurrentWeather(cityName, lat, lon) {
     var requestUrl = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
     fetch(requestUrl, {
@@ -510,7 +510,7 @@ function fetchCurrentWeather(lat, lon) {
       return response.json();
     })
     .then(function (data) {
-      displayCurrentWeather(data);
+      displayCurrentWeather(cityName, data);
       
       // I have to include the fetch call to get the five-day forecast here or else sometimes the forecast arrives before the current weather.
       fetchFiveDayForecast(lat, lon);
@@ -649,8 +649,9 @@ function select(cityButton) {
     /* 2. Fetch the weather data for the selected city. */
     var lat = cityButton.attr("lat");
     var lon = cityButton.attr("lon");
+    var cityName = cityButton.attr("city-name");
 
-    fetchCurrentWeather(lat, lon);
+    fetchCurrentWeather(cityName, lat, lon);
 }
 
 /*
