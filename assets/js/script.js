@@ -192,15 +192,6 @@ function createCityButton(cityName, lat, lon) {
     });
 
     /* 2. Create the close button, append it to the city button element. */
-    /*
-    var closeButton = $("<button>");
-    closeButton.attr("type", "button");
-    closeButton.attr("aria-label", "Close");
-    closeButton.addClass("close");
-    closeButton.on("click", closeButtonOnClick);
-    cityButton.append(closeButton);
-    */
-
     var closeButton = $("<button>");
     closeButton.attr("type", "button");
     closeButton.attr("aria-label", "Close");
@@ -209,11 +200,6 @@ function createCityButton(cityName, lat, lon) {
     cityButton.append(closeButton);
 
     /* 3. Create the close icon, append it to the close button element. */
-    /*
-    var iconToAdd = $("<i>");
-    iconToAdd.addClass("fas fa-times");
-    closeButton.append(iconToAdd);
-    */
     var spanToAdd = $("<span>");
     spanToAdd.html("&times;");
     spanToAdd.attr("aria-hidden", "true");
@@ -403,14 +389,16 @@ function fetchCoordinates(cityName) {
     /* 1. Fetch the data for the city. */
     var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q='+cityName+"&appid="+openWeatherApiKey;
 
-    fetch(requestUrl)
+    fetch(requestUrl, {
+        cache: "no-cache"
+    })
         .then(function (response) {
             //console.log("response", response);
 
             if (response.ok) {
                 return response.json();
             } else {
-                /*2. If there's some error code - if the api can't determine the city - we want to show the invalid city modal dialog. */
+                /*2. If there's some error code - if the api can't determine the city - we want to show the invalid city modal dialog. See the .catch function. */
                 Promise.reject(response);
             }
         })
@@ -454,7 +442,9 @@ function fetchCurrentWeather(lat, lon) {
 function fetchFiveDayForecast(lat, lon) {
     var requestUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+lat+"&lon="+lon+"&units=imperial&appid="+openWeatherApiKey;
 
-    fetch(requestUrl)
+    fetch(requestUrl, {
+        cache: "no-cache"
+    })
       .then(function (response) {
         //console.log("response", response);
         
@@ -594,6 +584,7 @@ function selectFirstCity() {
     }
 }
 
+/* Shows the modal. I have showModal as a function so I can add a more descriptive error message with a city name before I tell the modal to show. */
 function showModal(cityName) {
     modalTextElement.text("Error: \""+cityName+"\" is not a recognized city. Enter a valid city in the city search box.");
     modalElement.modal("show");

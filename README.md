@@ -8,9 +8,13 @@
 
 ![Work Day Scheduler Desktop Demo](./assets/images/weather-dashboard-desktop-demo.gif)
 
+------------------------------------------------------
+
 ## Mobile demo:                    
 
 ![Work Day Scheduler Mobile Demo](./assets/images/weather-dashboard-mobile-demo.gif)
+
+------------------------------------------------------
 
 <a href="#description">Description</a> •
 <a href="#key-features">Key Features</a> •
@@ -26,7 +30,7 @@ This is is a fairly simple web application that gives the current weather and fi
 
 ## Key Features
 
-- See the time, current weather and five-day forecast for anywhere in the world.
+- See the current time, current weather and five-day forecast for anywhere in the world.
 - Boasts a responsive design - it looks great on desktop, tablet, and mobile.
 - Closeable city buttons, so you can remove a city that you dont want to see anymore.
 - Draggable city buttons, so you can put the city whose weather you care about the most on the top of the list so it displays automatically.
