@@ -681,15 +681,26 @@ function submitButtonClick(event) {
     cityInputFormElement.reset();
 }
 
+/*
+ *  Logic for when the weather icon is clicked on mobile.
+ *  When the weather ico is clicked we have to:
+ *      1. Stop displaying the city select element.
+ *      2. Display the weather content
+ *      3. Stop displaying the weather icon.
+ *      4. Display the city icon.
+ */
 function weatherIconClick(event) {
-    console.log("WEATHER BUTTON CLICKED");
-
+    /* 1. Stop displaying the city select element. */
     citySelectBarElement.addClass("d-none");
+
+    /* 2. Display the weather content */
     weatherContentElement.removeClass("d-none");
 
+    /* 3. Stop displaying the weather icon. */
     weatherIconElement.removeClass("d-sm-none");
     weatherIconElement.addClass("d-none");
 
+    /* 4. Display the city icon. */
     cityIconElement.removeClass("d-none");
     cityIconElement.addClass("d-sm-none");
 }
@@ -705,4 +716,5 @@ function writeCityList() {
     localStorage.setItem("weatherCityList", stringifiedCityList);
 }
 
+/* This call is where the application starts. All other interactions happen through clickables. */
 initializeWeatherDashboard();
