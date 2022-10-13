@@ -1,4 +1,4 @@
-# Work Day Scheduler
+# Weather Dashboard
 
 <https://geminiad.github.io/weather-dashboard>
 
@@ -16,13 +16,13 @@
 
 ## Desktop demo:           
 
-![Work Day Scheduler Desktop Demo](./assets/images/weather-dashboard-desktop-demo.gif)
+![Weather Dashboard Desktop Demo](./assets/images/weather-dashboard-desktop-demo.gif)
 
 ------------------------------------------------------
 
 ## Mobile demo:                    
 
-![Work Day Scheduler Mobile Demo](./assets/images/weather-dashboard-mobile-demo.gif)
+![Weather Dashboard Mobile Demo](./assets/images/weather-dashboard-mobile-demo.gif)
 
 ------------------------------------------------------
 
